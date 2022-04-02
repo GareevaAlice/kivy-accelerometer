@@ -1,0 +1,13 @@
+<Container>:
+    display: display
+    rows: 1
+    BoxLayout:
+        orientation: "vertical"
+        RestartButton:
+            on_release: root.restart()
+        SaveButton:
+            on_release: root.save()
+    Label:
+        id: display
+        font_size: dp(50)
+        text: "Do a restart"
