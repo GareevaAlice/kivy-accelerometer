@@ -49,7 +49,7 @@ class Container(GridLayout):
             self.display.text = "Accelerometer:\n" \
                                 "X = %.2f\n" \
                                 "Y = %.2f\n" \
-                                "Z = %2.f " % (x, y, z)
+                                "Z = %.2f " % (x, y, z)
         except:
             self.display.text = "Cannot read accelerometer!"
 
