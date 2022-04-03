@@ -7,8 +7,10 @@ from kivy.properties import ObjectProperty
 from kivy.uix.gridlayout import GridLayout
 from kivy.utils import platform
 
-from datetime import datetime
 import os
+import json
+from datetime import datetime
+from collections import defaultdict
 
 kv_path = './kv/'
 for kv in os.listdir(kv_path):
@@ -25,10 +27,10 @@ class SaveButton(Button):
 
 class Container(GridLayout):
     display = ObjectProperty()
-    results = dict()
+    results = defaultdict(list)
 
     def restart(self):
-        self.results = dict()
+        self.results = defaultdict(list)
         try:
             accelerometer.enable()
             Clock.schedule_interval(self.update, 1)
@@ -37,11 +39,17 @@ class Container(GridLayout):
 
     def update(self, dt):
         try:
-            result = dict()
-            result['x'] = accelerometer.acceleration[0]
-            result['y'] = accelerometer.acceleration[0]
-            result['z'] = accelerometer.acceleration[0]
-            self.results[self.get_time()] = result
+            x, y, z = accelerometer.acceleration[0], \
+                      accelerometer.acceleration[1], \
+                      accelerometer.acceleration[2]
+            self.results['X'].append(x)
+            self.results['Y'].append(y)
+            self.results['Z'].append(z)
+            self.results['time'].append(self.get_time())
+            self.display.text = "Accelerometer:\n" \
+                                "X = %.2f\n" \
+                                "Y = %.2f\n" \
+                                "Z = %2.f " % (x, y, z)
         except:
             self.display.text = "Cannot read accelerometer!"
 
@@ -54,7 +62,7 @@ class Container(GridLayout):
         file_name = "{}.json".format(self.get_time())
         file_path = os.path.join(download_dir_path, file_name)
         with open(file_path, "w") as outfile:
-            outfile.write(str(self.results))
+            json.dump(self.results, outfile)
 
     def get_time(self):
         return datetime.now().strftime("%H:%M:%S")
