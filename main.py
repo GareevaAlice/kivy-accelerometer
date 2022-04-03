@@ -65,7 +65,7 @@ class Container(GridLayout):
             json.dump(self.results, outfile)
 
     def get_time(self):
-        return datetime.now().strftime("%H:%M:%S")
+        return datetime.now().strftime("%H-%M-%S")
 
 
 class MainApp(App):
